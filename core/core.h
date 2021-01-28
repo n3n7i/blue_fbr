@@ -3,7 +3,7 @@
 #ifndef fbrCore_h
 #define fbrCore_h
 
-#ifdef RADIO
+#ifdef NRF_RADIO
 #define BLUE_msg "radio found"
 #endif
 
