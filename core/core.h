@@ -1,10 +1,18 @@
 
-#include "Arduino.h"
+//#include "Arduino.h"
 
 #ifndef fbrCore_h
 #define fbrCore_h
 
 //#define blueRegister _SFR_IO8(0x40001000)
+
+#ifdef NRF_FICR
+#define BLUE_msgII "factory settings found"
+
+#define BLUE_devaddr NRF_FICR->DEVICEADDR // 48
+#define BLUE_devID NRF_FICR->DEVICEID // 64
+
+#endif
 
 #ifdef NRF_RADIO
 #define BLUE_msg "radio found"
@@ -25,8 +33,8 @@
 
 #define BLUE_sfd NRF_RADIO->SFD
 
-#define BLUE_cfg0 NRF_RADIO->PCNF0
-#define BLUE_cfg1 NRF_RADIO->PCNF1
+#define BLUE_cfg0 NRF_RADIO->PCNF0  // 030F010F [preamb || S1 len bits || S0 len bytes || len bits]
+#define BLUE_cfg1 NRF_RADIO->PCNF1  // 0307FFFF [whiten/endian || addr len(2-4) || static len || max len]
 
 #define BLUE_dab32x NRF_RADIO->DAB //[0..7]
 #define BLUE_dap16x NRF_RADIO->DAP //[0..7]
@@ -81,11 +89,11 @@ confBLUE::confBLUE(int s){
 /*
 Nrf_1Mbit       0
 1 Mbit/s Nordic proprietary radio mode
-pream =x
+pream =0 (1 byte)
 
 Nrf_2Mbit       1
 2 Mbit/s Nordic proprietary radio mode
-pream =x
+pream =0
 
 Ble_1Mbit       3 
 1 Mbit/s BLE
@@ -115,6 +123,10 @@ pream = 2
 #define BLUE_msg "definition unknown"
 #define BLUE_state "-1"
 #define BLUE_power "-1"
+#endif
+
+#ifndef BLUE_msgII
+#define BLUE_msgII "definition unknown"
 #endif
 
 #endif
