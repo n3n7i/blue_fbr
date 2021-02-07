@@ -45,7 +45,7 @@
 #define BLUE_pref03 NRF_RADIO->PREFIX0
 #define BLUE_pref47 NRF_RADIO->PREFIX1
 
-#define BLUE_txaddr NRF_RADIO->TXADDRESSES //&0x7
+#define BLUE_txaddr NRF_RADIO->TXADDRESS //&0x7
 #define BLUE_rxaddr NRF_RADIO->RXADDRESSES //&0xFF
 
 #define BLUE_ready NRF_RADIO->EVENTS_READY
@@ -66,6 +66,7 @@ class confBLUE{
   public:
     confBLUE(int s, uint8_t a, uint8_t b, uint8_t c, uint8_t d, uint8_t e);
     confBLUE(int s);
+    confBLUE();
     int standard;
     uint8_t len_offset;
     uint8_t len_field;
@@ -82,9 +83,13 @@ confBLUE::confBLUE(int s, uint8_t a, uint8_t b, uint8_t c, uint8_t d, uint8_t e)
 confBLUE::confBLUE(int s){
   if(s==1){ 
     confBLUE(s, 0, 8, 0, 1, 2);
+    }  
   }
-  
-}
+
+confBLUE::confBLUE(){
+  confBLUE(1);
+  }
+
 
 /*
 Nrf_1Mbit       0
