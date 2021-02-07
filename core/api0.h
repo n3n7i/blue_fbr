@@ -6,6 +6,7 @@ class cbrFun{
   public:
     cbrFun(confBLUE x);
     cbrFun(int standard);
+    cbrFun();
     confBLUE config;
     
     void txEn();
@@ -17,7 +18,11 @@ class cbrFun{
 
     void setconfig();
     void setchannel(uint8_t c);
-    void setdataPtr(uint8_t* d)
+    void setdataPtr(char* d);
+
+    void localaddr();
+    void remoteaddr(uint8_t id, uint32_t addr, uint16_t pref);
+    void enableremote(uint8_t id);
   };
 
 
@@ -26,8 +31,12 @@ cbrFun::cbrFun(confBLUE x){
   }
 
 cbrFun::cbrFun(int standard){
-  config = confBLUE(standard);
+  cbrFun(confBLUE(standard));
   }
+
+cbrFun::cbrFun(){
+  cbrFun(1);  
+}
 
 void cbrFun::txEn(){
   BLUE_txen = 1;
@@ -69,9 +78,32 @@ void cbrFun::setchannel(uint8_t c){
   BLUE_channel = c;
   }
 
-void cbrFun::setdataPtr(uint8_t* d){
-  BLUE_data = d;
+void cbrFun::setdataPtr(char* d){
+  BLUE_data = (uint32_t) &d;
   }
 
+void cbrFun::localaddr(){
 
+  BLUE_baddr0 = BLUE_devID[0];
+  BLUE_baddr1 = BLUE_devID[1];
+  //?
+  //BLUE_data = (uint32_t) &d;
+  }
+
+void cbrFun::remoteaddr(uint8_t id, uint32_t addr, uint16_t pref){
+  if(id<8){
+    BLUE_dab32x[id] = addr;
+    BLUE_dap16x[id] = pref;
+    }
+  //BLUE_data = (uint32_t) &d;
+  }
+
+//void cbrFun::
+
+void cbrFun::enableremote(uint8_t id){
+  if(id<8){
+    BLUE_txaddr = id;
+    BLUE_rxaddr |= 0x01 << id;
+    }
+}
   
